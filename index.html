@@ -96,6 +96,19 @@
       color: #5e72e4;
       font-weight: 600;
     }
+    .send-button {
+      position: fixed;
+      bottom: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #5e72e4;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-size: 16px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -128,10 +141,28 @@
     </div>
   </div>
 
+  <button class="send-button" onclick="sendScheduleData()">Сохранить</button>
+
   <div class="bottom-nav">
     <div class="active">Расписание</div>
     <div>События</div>
     <div>Настройки</div>
   </div>
+
+  <script>
+    Telegram.WebApp.ready();
+    const user = Telegram.WebApp.initDataUnsafe?.user || {};
+    console.log('User:', user);
+
+    function sendScheduleData() {
+      const scheduleData = {
+        selectedDate: '2025-05-01',
+        activeSubject: 'Математика',
+        userId: user?.id || null,
+      };
+      Telegram.WebApp.sendData(JSON.stringify(scheduleData));
+      Telegram.WebApp.close();
+    }
+  </script>
 </body>
 </html>
