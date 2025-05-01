@@ -1,168 +1,76 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Расписание | Web App</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: #F6F7F9;
-      color: #1c1c1e;
-    }
-    header {
-      padding: 24px 16px 16px;
-      background: white;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-radius: 0 0 20px 20px;
-    }
-    header h1 {
-      font-size: 20px;
-      font-weight: 600;
-      margin: 0;
-    }
-    .tabs {
-      display: flex;
-      justify-content: space-around;
-      margin: 16px;
-      gap: 8px;
-    }
-    .tab {
-      flex: 1;
-      padding: 12px;
-      border-radius: 16px;
-      text-align: center;
-      background: #E0E0E5;
-      color: #444;
-      font-weight: 500;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .tab.active {
-      background: #FFFFFF;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-      color: #1c1c1e;
-    }
-    .schedule {
-      padding: 0 16px 100px;
-    }
-    .pair {
-      background: #fff;
-      padding: 16px;
-      border-radius: 20px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-      margin-bottom: 12px;
-      transition: 0.3s;
-    }
-    .pair.active {
-      background: linear-gradient(135deg, #a5d6a7, #81c784);
-      color: white;
-      transform: scale(1.02);
-    }
-    .pair .time {
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-    .pair .subject {
-      font-size: 16px;
-      font-weight: 500;
-    }
-    .pair .info {
-      font-size: 13px;
-      color: rgba(0, 0, 0, 0.5);
-    }
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: white;
-      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
-      display: flex;
-      justify-content: space-around;
-      padding: 12px 0;
-    }
-    .bottom-nav div {
-      font-size: 14px;
-      color: #888;
-    }
-    .bottom-nav .active {
-      color: #5e72e4;
-      font-weight: 600;
-    }
-    .send-button {
-      position: fixed;
-      bottom: 70px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #5e72e4;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 24px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Web App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 100%;
+            padding: 15px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Сегодня, 1 мая</h1>
-    <button style="background:none;border:none;font-size:20px">📅</button>
-  </header>
-
-  <div class="tabs">
-    <div class="tab active">Сегодня</div>
-    <div class="tab">Завтра</div>
-    <div class="tab">Неделя</div>
-  </div>
-
-  <div class="schedule">
-    <div class="pair active">
-      <div class="time">08:10 - 09:40</div>
-      <div class="subject">Математика</div>
-      <div class="info">Иванов И.И. • Ауд. 305</div>
+    <div class="container">
+        <h2>Расписание ПНИПУ</h2>
+        <div id="schedule">
+            <!-- Данные будут загружены через JS -->
+        </div>
+        <button id="sendDataBtn">Отправить данные в бот</button>
     </div>
-    <div class="pair">
-      <div class="time">10:00 - 11:30</div>
-      <div class="subject">Физика</div>
-      <div class="info">Петров П.П. • Ауд. 201</div>
-    </div>
-    <div class="pair">
-      <div class="time">11:50 - 13:20</div>
-      <div class="subject">Программирование</div>
-      <div class="info">Сидоров С.С. • Ауд. 101</div>
-    </div>
-  </div>
 
-  <button class="send-button" onclick="sendScheduleData()">Сохранить</button>
-
-  <div class="bottom-nav">
-    <div class="active">Расписание</div>
-    <div>События</div>
-    <div>Настройки</div>
-  </div>
-
-  <script>
-    Telegram.WebApp.ready();
-    const user = Telegram.WebApp.initDataUnsafe?.user || {};
-    console.log('User:', user);
-
-    function sendScheduleData() {
-      const scheduleData = {
-        selectedDate: '2025-05-01',
-        activeSubject: 'Математика',
-        userId: user?.id || null,
-      };
-      Telegram.WebApp.sendData(JSON.stringify(scheduleData));
-      Telegram.WebApp.close();
-    }
-  </script>
+    <script>
+        // Инициализация WebApp
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.MainButton.setText("Готово");
+        
+        // Загрузка данных расписания
+        function loadSchedule() {
+            // Здесь может быть fetch запрос к вашему API
+            document.getElementById('schedule').innerHTML = `
+                <div class="pair">
+                    <h3>Математика</h3>
+                    <p>08:10 - 09:40</p>
+                    <p>Ауд. 305</p>
+                </div>
+            `;
+        }
+        
+        // Отправка данных в бот
+        document.getElementById('sendDataBtn').addEventListener('click', () => {
+            const data = {
+                selected_date: new Date().toLocaleDateString(),
+                action: 'schedule_viewed'
+            };
+            tg.sendData(JSON.stringify(data));
+            tg.close();
+        });
+        
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', loadSchedule);
+    </script>
 </body>
 </html>
